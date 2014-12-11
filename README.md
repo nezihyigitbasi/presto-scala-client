@@ -8,14 +8,14 @@ a callback interface, and an actor interface.
 ###Cursor Usage
 
 ####Print the raw query results
-<pre><code>
+```
 client.submitQuery(query).foreach {
   queryResult => println(queryResult)
 }
-</code></pre>
+```
 
 ####Print each list of data in the results
-<pre><code>
+```
 client.submitQuery(query).filter {
   result => result.getData != null
 }.foreach {
@@ -23,7 +23,7 @@ client.submitQuery(query).filter {
     println
   }
 }
-</code></pre>
+```
 
 ####Can also use for-comprehensions
 ```
@@ -37,15 +37,15 @@ println(s"${nRows} rows retrieved")
 
 ###Callback Usage
 
-<pre><code>
+```
 client.submitQuery(query,
   queryResult => {
     println(s"got result ${queryResult}")
   })
-</code></pre>
+```
 
 ###Actor Usage
-<pre><code>
+```
 class ClientActor (prestoActor: ActorRef) extends Actor {
   def receive = {
     case QUERY_RESULTS (queryResults) => {
@@ -80,10 +80,10 @@ object ActorSample extends BaseSample{
     prestoClientActor ! SUBMIT_QUERY(query)
   }
 }
-</code></pre>
+```
 
 ##Building the Source
 
-<pre><code>
-   sbt doc package
-</code></pre>
+```
+sbt doc package
+```
