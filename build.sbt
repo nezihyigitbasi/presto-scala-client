@@ -13,9 +13,11 @@
  */
 name := "presto-scala-client"
 
-organization := "nyigitbasi"
+organization := "com.github.nezihyigitbasi"
 
 version := "0.1"
+
+description := "A Scala client for the Presto SQL engine"
 
 libraryDependencies ++= Seq(
   "com.stackmob" %% "newman" % "1.3.5",
@@ -43,7 +45,7 @@ pomExtra :=
         <developers>
           <developer>
             <name>Nezih Yigitbasi</name>
-            <url>github.com/nezihyigitbasi</url>
+            <url>http://github.com/nezihyigitbasi</url>
           </developer>
         </developers>
 
