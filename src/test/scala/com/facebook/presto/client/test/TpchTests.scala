@@ -31,21 +31,24 @@ class TpchTests extends FlatSpec {
   val testClientConfig = new PrestoClientConfig(source = testSource, schema = testSchema, catalog = testCatalog, baseURI = testURI, httpThreadCount = threadCount)
   val prestoClient = new PrestoClient(testClientConfig)
 
-  "The first 3 nations" should "be equal" in {
-    val expected = List("ALGERIA", "ARGENTINA", "BRAZIL")
+  def assertQuery(query:String, expectedResult: List[Any]): Unit = {
     var index = 0
-    prestoClient.submitQuery("select name from nation order by name asc limit 3").filter {
+    prestoClient.submitQuery(query).filter {
       row => row.getData != null
     }.foreach {
       row => {
         row.getData.asScala.foreach {
           element => {
-            assert(element.get(0) == expected(index))
+            assert(element.get(0) == expectedResult(index))
             index += 1
           }
         }
       }
     }
+  }
+
+  "The first 3 nations" should "be equal" in {
+    assertQuery("select name from nation order by name asc limit 3", List("ALGERIA", "ARGENTINA", "BRAZIL"))
   }
 
   "The first 5 regions" should "be equal" in {
@@ -111,5 +114,13 @@ class TpchTests extends FlatSpec {
         }
       }
     }
+  }
+
+  "The available quantities for part 1001" should "be ..." in {
+    assertQuery("select availqty from part p, partsupp s where p.partkey=s.partkey and p.partkey = 1001 order by availqty asc", List(2967, 7621, 8139, 8142))
+  }
+
+  "The total size of all parts" should "be 50511" in {
+    assertQuery("select sum(size) from part", List(50511))
   }
 }

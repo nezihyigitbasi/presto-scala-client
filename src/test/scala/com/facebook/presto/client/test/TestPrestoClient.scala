@@ -31,9 +31,10 @@ class TestPrestoClient extends FlatSpec {
 
   val testClientConfig = new PrestoClientConfig(source = testSource, schema = testSchema, catalog = testCatalog, baseURI = testURI, httpThreadCount = threadCount)
 
-  "PrestoClient" should "create the base statement URI correctly" in {
+  "PrestoClient" should "initialize URLs correctly" in {
     val client = new PrestoClient(testClientConfig)
     assert(client.statementURL.toString == testURI + "/v1/statement")
+    assert(client.queryURL.toString == testURI + "/v1/query")
   }
 
   "PrestoClient" should "create the HTTP headers correctly" in {
