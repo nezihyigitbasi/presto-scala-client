@@ -105,7 +105,7 @@ Add the following dependency to your build script
 "com.github.nezihyigitbasi" %% "presto-scala-client" % "0.1"
 ```
 
-##Building the Source
+##Building from the Source
 
 ```
 sbt doc package
