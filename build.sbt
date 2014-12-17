@@ -11,6 +11,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import SonatypeKeys._
+
+// Import default settings. This changes `publishTo` settings to use the Sonatype repository and add several commands for publishing.
+sonatypeSettings
+
 name := "presto-scala-client"
 
 organization := "com.github.nezihyigitbasi"
@@ -31,10 +37,6 @@ libraryDependencies ++= Seq(
   "org.scalatest" % "scalatest_2.10" % "2.2.2" % "test"
 )
 
-licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html"))
-
-releaseSettings
-
 publishMavenStyle := true
 
 pomIncludeRepository := { _ => false }
@@ -47,7 +49,10 @@ pomExtra :=
             <distribution>repo</distribution>
           </license>
         </licenses>
-
+        <scm>
+          <url>git@github.com:nezihyigitbasi/presto-scala-client.git</url>
+          <connection>scm:git:git@github.com:nezihyigitbasi/presto-scala-client.git</connection>
+        </scm>
         <developers>
           <developer>
             <name>Nezih Yigitbasi</name>
