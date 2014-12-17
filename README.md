@@ -82,7 +82,9 @@ object ActorSample extends BaseSample{
 }
 ```
 
-###Query Statistics
+###Other Functionality
+
+####Query Statistics
 
 ```
 val cursor = client.submitQuery(query)
@@ -96,7 +98,13 @@ client.getQueryStatistics(cursor.queryId.get.get, statistics =>
     println(s"${key} => ${value}")
 )
 ```
-    
+
+##Using the Library
+Add the following dependency to your build script
+```
+"com.github.nezihyigitbasi" %% "presto-scala-client" % "0.1"
+```
+
 ##Building the Source
 
 ```
