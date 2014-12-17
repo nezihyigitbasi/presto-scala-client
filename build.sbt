@@ -19,6 +19,8 @@ version := "0.1"
 
 description := "A Scala client for the Presto SQL engine"
 
+homepage := Some(url("https://github.com/nezihyigitbasi/presto-scala-client"))
+
 libraryDependencies ++= Seq(
   "com.stackmob" %% "newman" % "1.3.5",
   "com.facebook.presto" % "presto-client" % "0.85",
@@ -29,9 +31,13 @@ libraryDependencies ++= Seq(
   "org.scalatest" % "scalatest_2.10" % "2.2.2" % "test"
 )
 
+licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html"))
+
 releaseSettings
 
 publishMavenStyle := true
+
+pomIncludeRepository := { _ => false }
 
 pomExtra :=
         <licenses>
@@ -48,6 +54,8 @@ pomExtra :=
             <url>http://github.com/nezihyigitbasi</url>
           </developer>
         </developers>
+
+publishArtifact in Test := false
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
