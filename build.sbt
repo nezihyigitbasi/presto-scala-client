@@ -13,6 +13,8 @@
  */
 name := "presto-scala-client"
 
+organization := "nyigitbasi"
+
 version := "0.1"
 
 libraryDependencies ++= Seq(
@@ -26,4 +28,22 @@ libraryDependencies ++= Seq(
 )
 
 releaseSettings
+
+publishMavenStyle := true
+
+pomExtra :=
+        <licenses>
+          <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+          </license>
+        </licenses>
+
+        <developers>
+          <developer>
+            <name>Nezih Yigitbasi</name>
+            <url>github.com/nezihyigitbasi</url>
+          </developer>
+        </developers>
 
