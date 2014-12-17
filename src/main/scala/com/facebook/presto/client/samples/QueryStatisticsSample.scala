@@ -20,9 +20,14 @@ object QueryStatisticsSample extends BaseSample with LazyLogging {
     }
 
     println("Query statistics:")
-    client.getQueryStatistics(cursor.queryId.get.get, statistics =>
-      for ((key,value) <- statistics)
-        println(s"${key} => ${value}")
-    )
+    cursor.getQueryId() match {
+      case Some(queryId) =>
+            client.getQueryStatistics(queryId,
+                                      statistics => //print the map
+                                            for ((key,value) <- statistics)
+                                              println(s"${key} => ${value}")
+            )
+      case None => ; //nop
+    }
   }
 }
