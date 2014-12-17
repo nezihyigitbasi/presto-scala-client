@@ -33,8 +33,8 @@ class PrestoCursor(queryString: String, prestoClient: PrestoClient) extends Iter
   require(prestoClient != null)
 
   private var nextURI: URI = null
-  private val queryId = new AtomicReference[Option[String]](None)
   private[scala] val queryInProgress = new AtomicReference[Option[Future[HttpResponse]]](None)
+  val queryId = new AtomicReference[Option[String]](None)
 
   override def iterator: Iterator[QueryResults] = new PrestoIterator
 

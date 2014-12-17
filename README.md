@@ -82,6 +82,21 @@ object ActorSample extends BaseSample{
 }
 ```
 
+###Query Statistics
+
+```
+val cursor = client.submitQuery(query)
+cursor.foreach {
+  queryResult => println(queryResult)
+}
+
+println("Query statistics:")
+client.getQueryStatistics(cursor.queryId.get.get, statistics =>
+  for ((key,value) <- statistics)
+    println(s"${key} => ${value}")
+)
+```
+    
 ##Building the Source
 
 ```

@@ -17,9 +17,12 @@ import java.net.{URI, URL}
 
 import com.facebook.presto.client.PrestoHeaders._
 import com.facebook.presto.client.QueryResults
+import com.google.common.base.Charsets
 import com.stackmob.newman.dsl._
 import com.stackmob.newman.response.HttpResponse
 import com.typesafe.scalalogging.slf4j.LazyLogging
+import net.liftweb.json.JsonAST.{JString, JValue}
+import net.liftweb.json._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -110,6 +113,25 @@ class PrestoClient(val config: PrestoClientConfig) extends LazyLogging {
 
     GET(results.getNextUri.toURL).setHeaders(httpHeaders).apply.onComplete {
       case Success(response) =>  consumeAll(response, processFunction) //follow the chain of next URIs
+      case Failure(e) => throw e
+    }
+  }
+
+  /**
+   * Retrieves the query statistics from the Presto coordinator and calls the given processFunction with the statistics
+   * @param queryId
+   * @param processFunction
+   */
+  def getQueryStatistics(queryId: String, processFunction: Map[String, Any] => Unit) = {
+    require(queryId != null)
+    val url = new URL(s"${queryURL}/${queryId}")
+    GET(url).setHeaders(httpHeaders).apply.onComplete {
+      case Success(response) =>  {
+        val body = response.toJValue() \ "body"
+        val jsonJVal: JValue = parse(body.values.toString)
+        val queryStats = jsonJVal \\ "queryStats"
+        processFunction(queryStats.values.asInstanceOf[Map[String, Any]])
+      }
       case Failure(e) => throw e
     }
   }
