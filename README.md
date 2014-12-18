@@ -93,7 +93,7 @@ cursor.foreach {
 }
 
 println("Query statistics:")
-client.getQueryStatistics(cursor.queryId.get.get, statistics =>
+client.getQueryStatistics(queryId, statistics =>
   for ((key,value) <- statistics)
     println(s"${key} => ${value}")
 )
