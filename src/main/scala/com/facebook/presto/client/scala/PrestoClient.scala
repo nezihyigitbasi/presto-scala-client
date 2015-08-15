@@ -143,10 +143,10 @@ class PrestoClient(val config: PrestoClientConfig) extends LazyLogging {
   }
 
   /**
-   * Get all the nodes in the cluster
+   * Call the given function for each Presto node in the cluster
    * @param callback This callback gets called for every node in the cluster
    */
-  def getAllNodes(callback: PrestoNode => Unit) = {
+  def forEachPrestoNode(callback: PrestoNode => Unit) = {
     val url = new URL(s"${nodeURL}")
     GET(url).setHeaders(httpHeaders).apply.onComplete {
       case Success(response) =>  {

@@ -102,7 +102,7 @@ client.getQueryStatistics(queryId, statistics =>
 ####Getting All Nodes
 
 ```
-client.getAllNodes(prestoNode => println(prestoNode))
+client.forEachPrestoNode(prestoNode => println(prestoNode))
 ```
 
 ##Using the Library

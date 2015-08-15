@@ -23,6 +23,6 @@ object PrestoNodesSample extends BaseSample with LazyLogging {
 
   def main(args: Array[String]) {
     val client = new PrestoClient(new PrestoClientConfig(baseURI="http://localhost:8080//"))
-    client.getAllNodes(prestoNode => println(prestoNode))
+    client.forEachPrestoNode(prestoNode => println(prestoNode))
   }
 }
