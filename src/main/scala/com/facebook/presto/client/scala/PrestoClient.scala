@@ -21,11 +21,15 @@ import com.google.common.base.Charsets
 import com.stackmob.newman.dsl._
 import com.stackmob.newman.response.HttpResponse
 import com.typesafe.scalalogging.slf4j.LazyLogging
+import io.airlift.units.Duration
 import net.liftweb.json.JsonAST.{JString, JValue}
 import net.liftweb.json._
+import org.joda.time.format.ISODateTimeFormat
 
+import scala.collection.immutable.HashMap
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.runtime.BoxedUnit
 import scala.util.{Failure, Success}
 
 
@@ -53,6 +57,8 @@ class PrestoClient(val config: PrestoClientConfig) extends LazyLogging {
   require(config != null)
   val statementURL = new URL(config.baseURI + "/v1/statement")
   val queryURL = new URL(config.baseURI + "/v1/query")
+  val nodeURL = new URL(config.baseURI + "/v1/node")
+
   val httpHeaders = List(
     (PRESTO_USER, System.getProperty("user.name")),
     (PRESTO_SOURCE, config.source),
@@ -120,9 +126,9 @@ class PrestoClient(val config: PrestoClientConfig) extends LazyLogging {
   /**
    * Retrieves the query statistics from the Presto coordinator and calls the given processFunction with the statistics
    * @param queryId
-   * @param processFunction
+   * @param callback
    */
-  def getQueryStatistics(queryId: String, processFunction: Map[String, Any] => Unit) = {
+  def getQueryStatistics(queryId: String, callback: Map[String, Any] => Unit) = {
     require(queryId != null)
     val url = new URL(s"${queryURL}/${queryId}")
     GET(url).setHeaders(httpHeaders).apply.onComplete {
@@ -130,7 +136,29 @@ class PrestoClient(val config: PrestoClientConfig) extends LazyLogging {
         val body = response.toJValue() \ "body"
         val jsonJVal: JValue = parse(body.values.toString)
         val queryStats = jsonJVal \\ "queryStats"
-        processFunction(queryStats.values.asInstanceOf[Map[String, Any]])
+        callback(queryStats.values.asInstanceOf[Map[String, Any]])
+      }
+      case Failure(e) => throw e
+    }
+  }
+
+  /**
+   * Get all the nodes in the cluster
+   * @param callback This callback gets called for every node in the cluster
+   */
+  def getAllNodes(callback: PrestoNode => Unit) = {
+    val url = new URL(s"${nodeURL}")
+    GET(url).setHeaders(httpHeaders).apply.onComplete {
+      case Success(response) =>  {
+        val body = response.toJValue() \ "body"
+        val nodeArray: JArray = parse(body.values.toString).asInstanceOf[JArray]
+        nodeArray.values.map(node => node.asInstanceOf[HashMap[String, Any]]).
+        map(values => new PrestoNode(values("uri").asInstanceOf[String], values("recentRequests").asInstanceOf[Double],
+          values("recentFailures").asInstanceOf[Double], values("recentSuccesses").asInstanceOf[Double],
+          ISODateTimeFormat.dateTime().parseDateTime(values("lastRequestTime").asInstanceOf[String]),
+          ISODateTimeFormat.dateTime().parseDateTime(values("lastResponseTime").asInstanceOf[String]),
+          values("recentFailureRatio").asInstanceOf[Double], Duration.valueOf(values("age").asInstanceOf[String]), values("recentFailuresByType").asInstanceOf[Map[String, Double]]))
+        .foreach(prestoNode => callback(prestoNode))
       }
       case Failure(e) => throw e
     }
