@@ -99,10 +99,16 @@ client.getQueryStatistics(queryId, statistics =>
 )
 ```
 
+####Getting All Nodes
+
+```
+client.getAllNodes(prestoNode => println(prestoNode))
+```
+
 ##Using the Library
 Add the following dependency to your build script
 ```
-"com.github.nezihyigitbasi" %% "presto-scala-client" % "0.1"
+"com.github.nezihyigitbasi" %% "presto-scala-client" % "0.2"
 ```
 
 ##Building from the Source
