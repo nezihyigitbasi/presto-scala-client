@@ -1,20 +1,20 @@
-##scala-presto
+## scala-presto
 
-scala-presto is a Scala client for the [Presto](http://prestodb.io/) SQL engine. The client exposes three easy to use interfaces: a cursor interface,
-a callback interface, and an actor interface.
+scala-presto is a Scala client for the [Presto](http://prestodb.io/) SQL engine that I built for fun, so be careful if you want to use this in production :)
+The client exposes three easy to use interfaces: a cursor interface, a callback interface, and an actor interface.
 
-##Usage
+## Usage
 
-###Cursor Usage
+### Cursor Usage
 
-####Print the raw query results
+#### Print the raw query results
 ```
 client.submitQuery(query).foreach {
   queryResult => println(queryResult)
 }
 ```
 
-####Print each list of data in the results
+#### Print each list of data in the results
 ```
 client.submitQuery(query).filter {
   result => result.getData != null
@@ -25,7 +25,7 @@ client.submitQuery(query).filter {
 }
 ```
 
-####Can also use for-comprehensions
+#### Can also use for-comprehensions
 ```
 val data = for {
   queryResult <- client.submitQuery(query) if queryResult.getData != null
@@ -35,7 +35,7 @@ val nRows = data.foldLeft(0)((c,list) => c + list.size)
 println(s"${nRows} rows retrieved")
 ```
 
-###Callback Usage
+### Callback Usage
 
 ```
 client.submitQuery(query,
@@ -44,7 +44,7 @@ client.submitQuery(query,
   })
 ```
 
-###Actor Usage
+### Actor Usage
 ```
 class ClientActor (prestoActor: ActorRef) extends Actor {
   def receive = {
@@ -82,9 +82,9 @@ object ActorSample extends BaseSample{
 }
 ```
 
-###Other Functionality
+### Other Functionality
 
-####Query Statistics
+#### Query Statistics
 
 ```
 val cursor = client.submitQuery(query)
@@ -99,19 +99,19 @@ client.getQueryStatistics(queryId, statistics =>
 )
 ```
 
-####Getting All Nodes
+#### Getting All Nodes
 
 ```
 client.forEachPrestoNode(prestoNode => println(prestoNode))
 ```
 
-##Using the Library
+## Using the Library
 Add the following dependency to your build script
 ```
 "com.github.nezihyigitbasi" %% "presto-scala-client" % "0.2"
 ```
 
-##Building from the Source
+## Building from the Source
 
 ```
 sbt doc package
